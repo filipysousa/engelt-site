@@ -130,7 +130,7 @@
 })();
 
 
-/* ── Contact form (frontend only) ── */
+/* ── Contact form — envia via PHP ── */
 (function () {
   var form = document.getElementById('contatoForm');
   if (!form) return;
@@ -142,18 +142,41 @@
     btn.textContent = 'Enviando...';
     btn.disabled = true;
 
-    // Simulate send delay — replace with fetch() to your backend
-    setTimeout(function () {
-      btn.textContent = 'Mensagem Enviada!';
-      btn.style.background = '#22c55e';
-      form.reset();
+    var data = new FormData(form);
 
-      setTimeout(function () {
-        btn.textContent = 'Enviar Mensagem';
-        btn.style.background = '';
+    fetch('enviar.php', { method: 'POST', body: data })
+      .then(function (res) { return res.json(); })
+      .then(function (json) {
+        if (json.ok) {
+          btn.textContent = 'Mensagem Enviada!';
+          btn.style.background = '#22c55e';
+          form.reset();
+          setTimeout(function () {
+            btn.textContent = 'Enviar Mensagem';
+            btn.style.background = '';
+            btn.disabled = false;
+          }, 4000);
+        } else {
+          btn.textContent = 'Erro — tente novamente';
+          btn.style.background = '#ef4444';
+          btn.disabled = false;
+          setTimeout(function () {
+            btn.textContent = 'Enviar Mensagem';
+            btn.style.background = '';
+          }, 4000);
+          alert(json.msg || 'Erro ao enviar. Tente novamente.');
+        }
+      })
+      .catch(function () {
+        btn.textContent = 'Erro de conexão';
+        btn.style.background = '#ef4444';
         btn.disabled = false;
-      }, 4000);
-    }, 1200);
+        setTimeout(function () {
+          btn.textContent = 'Enviar Mensagem';
+          btn.style.background = '';
+        }, 4000);
+        alert('Erro de conexão. Tente novamente ou ligue para (85) 3279-6330.');
+      });
   });
 })();
 
