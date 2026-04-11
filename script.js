@@ -181,6 +181,154 @@
 })();
 
 
+/* ── Portfólio Lightbox ── */
+(function () {
+  var obras = [
+    {
+      titulo: 'SE 500 kV Cristino Castro',
+      fotos: [
+        'img/obras/secristinocastro500kv/subestacao.jpeg',
+        'img/obras/secristinocastro500kv/01.jpeg',
+        'img/obras/secristinocastro500kv/02.jpeg',
+        'img/obras/secristinocastro500kv/equipe.jpeg',
+        'img/obras/secristinocastro500kv/equipe02.jpeg',
+        'img/obras/secristinocastro500kv/equipe03.jpeg'
+      ]
+    },
+    {
+      titulo: 'LT 500 kV Serra do Seridó – Santa Luzia II',
+      fotos: [
+        'img/obras/lt-seridosantaluzia/Imagem9.jpg',
+        'img/obras/lt-seridosantaluzia/Imagem10.jpg',
+        'img/obras/lt-seridosantaluzia/Imagem11.jpg',
+        'img/obras/lt-seridosantaluzia/Imagem12.jpg',
+        'img/obras/lt-seridosantaluzia/Imagem13.jpg',
+        'img/obras/lt-seridosantaluzia/Imagem14.jpg'
+      ]
+    },
+    {
+      titulo: 'LT 500 kV UTE GNA II – Campos II',
+      fotos: [
+        'img/obras/lt-gnacampos/01.jpg',
+        'img/obras/lt-gnacampos/02.jpg',
+        'img/obras/lt-gnacampos/Imagem3.jpg',
+        'img/obras/lt-gnacampos/Imagem4.jpg',
+        'img/obras/lt-gnacampos/Imagem5.jpg',
+        'img/obras/lt-gnacampos/Imagem6.jpg',
+        'img/obras/lt-gnacampos/Imagem7.jpg',
+        'img/obras/lt-gnacampos/Imagem8.jpg'
+      ]
+    },
+    {
+      titulo: 'LT 230 kV Caetité Norte – Igaporã III',
+      fotos: [
+        'img/obras/lt-caetite/Imagem15.jpg',
+        'img/obras/lt-caetite/Imagem16.jpg',
+        'img/obras/lt-caetite/Imagem17.jpg',
+        'img/obras/lt-caetite/Imagem18.jpg',
+        'img/obras/lt-caetite/Imagem19.jpg',
+        'img/obras/lt-caetite/Imagem20.jpg',
+        'img/obras/lt-caetite/Imagem21.jpg'
+      ]
+    },
+    {
+      titulo: 'RMT Solar Serra do Mato – Trairi',
+      fotos: [
+        'img/obras/rmt-trairi/Imagem22.jpg',
+        'img/obras/rmt-trairi/Imagem23.jpg'
+      ]
+    }
+  ];
+
+  var lb         = document.getElementById('lightbox');
+  var lbImg      = document.getElementById('lbImg');
+  var lbTitle    = document.getElementById('lbTitle');
+  var lbCounter  = document.getElementById('lbCounter');
+  var lbClose    = document.getElementById('lbClose');
+  var lbPrev     = document.getElementById('lbPrev');
+  var lbNext     = document.getElementById('lbNext');
+  var lbBackdrop = document.getElementById('lbBackdrop');
+  if (!lb) return;
+
+  var current = { obra: 0, foto: 0 };
+
+  function openLightbox(obraIdx) {
+    current.obra = obraIdx;
+    current.foto = 0;
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    renderFoto(0);
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function renderFoto(dir) {
+    var obra  = obras[current.obra];
+    var total = obra.fotos.length;
+    lbTitle.textContent   = obra.titulo;
+    lbCounter.textContent = (current.foto + 1) + ' / ' + total;
+    lbPrev.style.display  = total > 1 ? '' : 'none';
+    lbNext.style.display  = total > 1 ? '' : 'none';
+
+    if (dir !== 0) {
+      lbImg.style.setProperty('--lb-dir', dir > 0 ? '50px' : '-50px');
+      lbImg.classList.add('lb-fade');
+    }
+
+    var src = obra.fotos[current.foto];
+    var tmp = new Image();
+    tmp.onload = function () {
+      lbImg.src = src;
+      if (dir !== 0) {
+        lbImg.style.setProperty('--lb-dir', dir > 0 ? '-50px' : '50px');
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { lbImg.classList.remove('lb-fade'); });
+        });
+      }
+    };
+    tmp.src = src;
+    if (dir === 0) lbImg.src = src;
+  }
+
+  function navFoto(dir) {
+    var total = obras[current.obra].fotos.length;
+    current.foto = (current.foto + dir + total) % total;
+    renderFoto(dir);
+  }
+
+  document.querySelectorAll('.portfolio-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      openLightbox(parseInt(card.getAttribute('data-obra'), 10));
+    });
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbBackdrop.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', function (e) { e.stopPropagation(); navFoto(-1); });
+  lbNext.addEventListener('click', function (e) { e.stopPropagation(); navFoto(1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowRight') navFoto(1);
+    if (e.key === 'ArrowLeft')  navFoto(-1);
+  });
+
+  var touchX = null;
+  lb.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var diff = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navFoto(diff > 0 ? 1 : -1);
+    touchX = null;
+  });
+})();
+
 /* ── Smooth scroll polyfill for older browsers ── */
 (function () {
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
