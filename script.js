@@ -2,6 +2,61 @@
    ENGELT ENGENHARIA — script.js
    ═══════════════════════════════════════════════════════════ */
 
+/* ── Hero slideshow ── */
+(function () {
+  var slides   = document.querySelectorAll('.hero__slide');
+  var label    = document.getElementById('heroLabel');
+  var dotsWrap = document.getElementById('heroDots');
+  if (!slides.length) return;
+
+  var current = 0;
+  var dots    = [];
+
+  // Build dots
+  slides.forEach(function (_, i) {
+    var d = document.createElement('button');
+    d.className = 'hero__dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Foto ' + (i + 1));
+    d.addEventListener('click', function () { goTo(i); });
+    dotsWrap.appendChild(d);
+    dots.push(d);
+  });
+
+  // Preload all slide backgrounds so they don't flicker
+  slides.forEach(function (slide) {
+    var bg = slide.style.backgroundImage;
+    var m  = bg.match(/url\(['"]?([^'"]+)['"]?\)/);
+    if (m) { var img = new Image(); img.src = m[1]; }
+  });
+
+  function updateLabel(idx) {
+    if (!label) return;
+    label.style.opacity = '0';
+    setTimeout(function () {
+      label.textContent = slides[idx].getAttribute('data-label') || '';
+      label.style.opacity = '1';
+    }, 400);
+  }
+
+  function goTo(idx) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = idx;
+    void slides[current].offsetWidth; // force reflow → restart Ken Burns
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    updateLabel(current);
+  }
+
+  updateLabel(0);
+
+  // Timer sempre corre — nunca é cancelado, nunca é pausado
+  setInterval(function () {
+    goTo((current + 1) % slides.length);
+  }, 6000);
+})();
+
+
 /* ── Navbar: scroll effect + mobile toggle ── */
 (function () {
   const navbar    = document.getElementById('navbar');
@@ -181,7 +236,7 @@
 })();
 
 
-/* ── Portfólio Lightbox ── */
+/* ── Portfólio — Album Grid + Viewer ── */
 (function () {
   var obras = [
     {
@@ -240,91 +295,128 @@
     }
   ];
 
-  var lb         = document.getElementById('lightbox');
-  var lbImg      = document.getElementById('lbImg');
-  var lbTitle    = document.getElementById('lbTitle');
-  var lbCounter  = document.getElementById('lbCounter');
-  var lbClose    = document.getElementById('lbClose');
-  var lbPrev     = document.getElementById('lbPrev');
-  var lbNext     = document.getElementById('lbNext');
-  var lbBackdrop = document.getElementById('lbBackdrop');
-  if (!lb) return;
+  var modal      = document.getElementById('albumModal');
+  var bgSlidesCt = document.getElementById('albumBgSlides');
+  var albumTitle = document.getElementById('albumTitle');
+  var albumGrid  = document.getElementById('albumGrid');
+  var albumClose = document.getElementById('albumClose');
+  var viewer     = document.getElementById('albumViewer');
+  var viewerImg  = document.getElementById('viewerImg');
+  var viewerCnt  = document.getElementById('viewerCounter');
+  var viewerClose = document.getElementById('viewerClose');
+  var viewerPrev  = document.getElementById('viewerPrev');
+  var viewerNext  = document.getElementById('viewerNext');
+  if (!modal || !viewer) return;
 
-  var current = { obra: 0, foto: 0 };
+  var currentObra = null;
+  var currentFoto = 0;
+  var bgTimer     = null;
+  var bgCurrent   = 0;
+  var bgEls       = [];
 
-  function openLightbox(obraIdx) {
-    current.obra = obraIdx;
-    current.foto = 0;
-    lb.classList.add('open');
-    lb.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    renderFoto(0);
-  }
+  function openAlbum(obraIdx) {
+    currentObra = obras[obraIdx];
+    currentFoto = 0;
+    albumTitle.textContent = currentObra.titulo;
 
-  function closeLightbox() {
-    lb.classList.remove('open');
-    lb.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  function renderFoto(dir) {
-    var obra  = obras[current.obra];
-    var total = obra.fotos.length;
-    lbTitle.textContent   = obra.titulo;
-    lbCounter.textContent = (current.foto + 1) + ' / ' + total;
-    lbPrev.style.display  = total > 1 ? '' : 'none';
-    lbNext.style.display  = total > 1 ? '' : 'none';
-
-    if (dir !== 0) {
-      lbImg.style.setProperty('--lb-dir', dir > 0 ? '50px' : '-50px');
-      lbImg.classList.add('lb-fade');
+    // Fundo animado
+    bgSlidesCt.innerHTML = '';
+    bgEls = [];
+    bgCurrent = 0;
+    currentObra.fotos.forEach(function (src, i) {
+      var el = document.createElement('div');
+      el.className = 'album-bg-slide' + (i === 0 ? ' active' : '');
+      el.style.backgroundImage = "url('" + src + "')";
+      bgSlidesCt.appendChild(el);
+      bgEls.push(el);
+    });
+    clearInterval(bgTimer);
+    if (bgEls.length > 1) {
+      bgTimer = setInterval(function () {
+        bgEls[bgCurrent].classList.remove('active');
+        bgCurrent = (bgCurrent + 1) % bgEls.length;
+        bgEls[bgCurrent].classList.add('active');
+      }, 7000);
     }
 
-    var src = obra.fotos[current.foto];
-    var tmp = new Image();
-    tmp.onload = function () {
-      lbImg.src = src;
-      if (dir !== 0) {
-        lbImg.style.setProperty('--lb-dir', dir > 0 ? '-50px' : '50px');
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () { lbImg.classList.remove('lb-fade'); });
-        });
-      }
-    };
-    tmp.src = src;
-    if (dir === 0) lbImg.src = src;
+    // Grade de fotos
+    albumGrid.innerHTML = '';
+    currentObra.fotos.forEach(function (src, i) {
+      var thumb = document.createElement('div');
+      thumb.className = 'album-thumb';
+      var img = document.createElement('img');
+      img.src = src;
+      img.alt = currentObra.titulo + ' — foto ' + (i + 1);
+      thumb.appendChild(img);
+      thumb.addEventListener('click', function () { openViewer(i); });
+      albumGrid.appendChild(thumb);
+    });
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
   }
 
-  function navFoto(dir) {
-    var total = obras[current.obra].fotos.length;
-    current.foto = (current.foto + dir + total) % total;
-    renderFoto(dir);
+  function closeAlbum() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    clearInterval(bgTimer);
+  }
+
+  function openViewer(idx) {
+    currentFoto = idx;
+    renderViewer();
+    viewer.classList.add('open');
+    viewer.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeViewer() {
+    viewer.classList.remove('open');
+    viewer.setAttribute('aria-hidden', 'true');
+  }
+
+  function renderViewer() {
+    viewerImg.src = currentObra.fotos[currentFoto];
+    viewerCnt.textContent = (currentFoto + 1) + ' / ' + currentObra.fotos.length;
+  }
+
+  function navViewer(dir) {
+    var total = currentObra.fotos.length;
+    currentFoto = (currentFoto + dir + total) % total;
+    renderViewer();
   }
 
   document.querySelectorAll('.portfolio-card').forEach(function (card) {
     card.addEventListener('click', function () {
-      openLightbox(parseInt(card.getAttribute('data-obra'), 10));
+      openAlbum(parseInt(card.getAttribute('data-obra'), 10));
     });
   });
 
-  lbClose.addEventListener('click', closeLightbox);
-  lbBackdrop.addEventListener('click', closeLightbox);
-  lbPrev.addEventListener('click', function (e) { e.stopPropagation(); navFoto(-1); });
-  lbNext.addEventListener('click', function (e) { e.stopPropagation(); navFoto(1); });
+  albumClose.addEventListener('click', closeAlbum);
+  document.getElementById('albumModal').querySelector('.album-modal__inner').addEventListener('click', function (e) {
+    if (e.target === this) closeAlbum();
+  });
+  viewerClose.addEventListener('click', closeViewer);
+  viewerPrev.addEventListener('click', function (e) { e.stopPropagation(); navViewer(-1); });
+  viewerNext.addEventListener('click', function (e) { e.stopPropagation(); navViewer(1); });
 
   document.addEventListener('keydown', function (e) {
-    if (!lb.classList.contains('open')) return;
-    if (e.key === 'Escape')     closeLightbox();
-    if (e.key === 'ArrowRight') navFoto(1);
-    if (e.key === 'ArrowLeft')  navFoto(-1);
+    if (viewer.classList.contains('open')) {
+      if (e.key === 'Escape')     closeViewer();
+      if (e.key === 'ArrowRight') navViewer(1);
+      if (e.key === 'ArrowLeft')  navViewer(-1);
+    } else if (modal.classList.contains('open')) {
+      if (e.key === 'Escape') closeAlbum();
+    }
   });
 
   var touchX = null;
-  lb.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
-  lb.addEventListener('touchend', function (e) {
+  viewer.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  viewer.addEventListener('touchend', function (e) {
     if (touchX === null) return;
     var diff = touchX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) navFoto(diff > 0 ? 1 : -1);
+    if (Math.abs(diff) > 50) navViewer(diff > 0 ? 1 : -1);
     touchX = null;
   });
 })();

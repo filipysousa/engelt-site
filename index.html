@@ -16,13 +16,15 @@
   <header class="navbar" id="navbar">
     <div class="container navbar__inner">
       <a href="#inicio" class="navbar__logo">
-        <img src="img/logo.png" alt="ENGELT Engenharia" height="44" />
+        <img src="img/logo.svg" alt="ENGELT Engenharia" height="44" />
       </a>
       <nav class="navbar__links" id="navLinks">
         <a href="#sobre">Sobre</a>
         <a href="#servicos">Serviços</a>
+        <a href="#portfolio">Obras</a>
         <a href="#diferenciais">Diferenciais</a>
         <a href="#clientes">Clientes</a>
+        <a href="area-interna.html">Área Interna</a>
         <a href="#contato" class="btn btn--nav">Contato</a>
       </nav>
       <button class="navbar__toggle" id="navToggle" aria-label="Menu">
@@ -33,8 +35,16 @@
 
   <!-- ═══════════════════════════════════════════ HERO -->
   <section class="hero" id="inicio">
+    <div class="hero__slides" id="heroSlides">
+      <div class="hero__slide active" data-label="SE 500 kV Cristino Castro — Piauí" style="background-image:url('img/obras/secristinocastro500kv/subestacao.jpeg')"></div>
+      <div class="hero__slide" data-label="LT 500 kV Serra do Seridó – Santa Luzia II" style="background-image:url('img/obras/lt-seridosantaluzia/Imagem10.jpg')"></div>
+      <div class="hero__slide" data-label="LT 500 kV UTE GNA II – Campos II" style="background-image:url('img/obras/lt-gnacampos/Imagem5.jpg')"></div>
+      <div class="hero__slide" data-label="LT 230 kV Caetité Norte – Igaporã III" style="background-image:url('img/obras/lt-caetite/Imagem17.jpg')"></div>
+      <div class="hero__slide" data-label="RMT Solar Serra do Mato – Trairi" style="background-image:url('img/obras/rmt-trairi/Imagem22.jpg')"></div>
+    </div>
     <div class="hero__overlay"></div>
-    <div class="hero__bg"></div>
+    <div class="hero__slide-label" id="heroLabel"></div>
+    <div class="hero__dots" id="heroDots"></div>
     <div class="container hero__content">
       <span class="hero__tag">Desde 2001 — Fortaleza, CE</span>
       <h1 class="hero__title">
@@ -99,6 +109,115 @@
       </div>
     </div>
   </section>
+
+  <!-- ═══════════════════════════════════════════ PORTFÓLIO -->
+  <section class="portfolio" id="portfolio">
+    <div class="container">
+      <div class="section-header" data-aos>
+        <span class="label-tag">Obras Executadas</span>
+        <h2>Obras</h2>
+        <p>Projetos entregues em todo o Brasil — de 34,5 kV a 500 kV.</p>
+      </div>
+      <div class="portfolio__grid">
+
+        <div class="portfolio-card portfolio-card--featured" data-aos data-obra="0">
+          <div class="portfolio-card__img">
+            <img src="img/obras/secristinocastro500kv/subestacao.jpeg" alt="SE 500 kV Cristino Castro" loading="lazy" />
+            <div class="portfolio-card__overlay">
+              <span class="portfolio-card__tag portfolio-card__tag--500">500 kV</span>
+              <div class="portfolio-card__overlay-info">
+                <h3>SE 500 kV Cristino Castro</h3>
+                <p>Piauí · Cobra Brasil · 6 fotos</p>
+                <span class="portfolio-card__cta">Ver galeria →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="portfolio-card" data-aos data-obra="1">
+          <div class="portfolio-card__img">
+            <img src="img/obras/lt-seridosantaluzia/Imagem9.jpg" alt="LT 500 kV Serra do Seridó" loading="lazy" />
+            <div class="portfolio-card__overlay">
+              <span class="portfolio-card__tag portfolio-card__tag--500">500 kV</span>
+              <div class="portfolio-card__overlay-info">
+                <h3>LT Serra do Seridó – Santa Luzia II</h3>
+                <p>Santa Luzia, PB · EDF Renováveis · 6 fotos</p>
+                <span class="portfolio-card__cta">Ver galeria →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="portfolio-card" data-aos data-obra="2">
+          <div class="portfolio-card__img">
+            <img src="img/obras/lt-gnacampos/01.jpg" alt="LT 500 kV GNA II – Campos II" loading="lazy" />
+            <div class="portfolio-card__overlay">
+              <span class="portfolio-card__tag portfolio-card__tag--500">500 kV</span>
+              <div class="portfolio-card__overlay-info">
+                <h3>LT UTE GNA II – Campos II</h3>
+                <p>São João da Barra, RJ · GNA · 8 fotos</p>
+                <span class="portfolio-card__cta">Ver galeria →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="portfolio-card" data-aos data-obra="3">
+          <div class="portfolio-card__img">
+            <img src="img/obras/lt-caetite/Imagem15.jpg" alt="LT 230 kV Caetité Norte" loading="lazy" />
+            <div class="portfolio-card__overlay">
+              <span class="portfolio-card__tag portfolio-card__tag--230">230 kV</span>
+              <div class="portfolio-card__overlay-info">
+                <h3>LT Caetité Norte – Igaporã III</h3>
+                <p>Caetité, BA · Rio Energy · 7 fotos</p>
+                <span class="portfolio-card__cta">Ver galeria →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="portfolio-card" data-aos data-obra="4">
+          <div class="portfolio-card__img">
+            <img src="img/obras/rmt-trairi/Imagem22.jpg" alt="RMT Trairi Solar" loading="lazy" />
+            <div class="portfolio-card__overlay">
+              <span class="portfolio-card__tag portfolio-card__tag--34">34,5 kV</span>
+              <div class="portfolio-card__overlay-info">
+                <h3>RMT Solar Serra do Mato</h3>
+                <p>Trairi, CE · QAIR · 2 fotos</p>
+                <span class="portfolio-card__cta">Ver galeria →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ ALBUM MODAL -->
+  <div class="album-modal" id="albumModal" aria-hidden="true">
+    <div class="album-modal__slides" id="albumBgSlides"></div>
+    <div class="album-modal__overlay"></div>
+    <div class="album-modal__inner">
+      <div class="album-modal__header">
+        <div>
+          <span class="label-tag label-tag--light">Galeria de Fotos</span>
+          <h2 id="albumTitle"></h2>
+        </div>
+        <button class="album-modal__close" id="albumClose" aria-label="Fechar">✕</button>
+      </div>
+      <div class="album-modal__grid" id="albumGrid"></div>
+    </div>
+  </div>
+
+  <!-- Album Viewer -->
+  <div class="album-viewer" id="albumViewer" aria-hidden="true">
+    <button class="album-viewer__close" id="viewerClose" aria-label="Fechar">✕</button>
+    <button class="album-viewer__prev" id="viewerPrev" aria-label="Anterior">&#8249;</button>
+    <button class="album-viewer__next" id="viewerNext" aria-label="Próxima">&#8250;</button>
+    <img id="viewerImg" src="" alt="" />
+    <span class="album-viewer__counter" id="viewerCounter"></span>
+  </div>
 
   <!-- ═══════════════════════════════════════════ SOBRE -->
   <section class="sobre" id="sobre">
@@ -372,107 +491,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ PORTFÓLIO -->
-  <section class="portfolio" id="portfolio">
-    <div class="container">
-      <div class="section-header" data-aos>
-        <span class="label-tag">Obras Executadas</span>
-        <h2>Portfólio</h2>
-        <p>Projetos entregues em todo o Brasil — de 34,5 kV a 500 kV.</p>
-      </div>
-      <div class="portfolio__grid">
-
-        <div class="portfolio-card portfolio-card--featured" data-aos data-obra="0">
-          <div class="portfolio-card__img">
-            <img src="img/obras/secristinocastro500kv/subestacao.jpeg" alt="SE 500 kV Cristino Castro" loading="lazy" />
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag portfolio-card__tag--500">500 kV</span>
-              <div class="portfolio-card__overlay-info">
-                <h3>SE 500 kV Cristino Castro</h3>
-                <p>Piauí · Cobra Brasil · 6 fotos</p>
-                <span class="portfolio-card__cta">Ver galeria →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="portfolio-card" data-aos data-obra="1">
-          <div class="portfolio-card__img">
-            <img src="img/obras/lt-seridosantaluzia/Imagem9.jpg" alt="LT 500 kV Serra do Seridó" loading="lazy" />
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag portfolio-card__tag--500">500 kV</span>
-              <div class="portfolio-card__overlay-info">
-                <h3>LT Serra do Seridó – Santa Luzia II</h3>
-                <p>Santa Luzia, PB · EDF Renováveis · 6 fotos</p>
-                <span class="portfolio-card__cta">Ver galeria →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="portfolio-card" data-aos data-obra="2">
-          <div class="portfolio-card__img">
-            <img src="img/obras/lt-gnacampos/01.jpg" alt="LT 500 kV GNA II – Campos II" loading="lazy" />
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag portfolio-card__tag--500">500 kV</span>
-              <div class="portfolio-card__overlay-info">
-                <h3>LT UTE GNA II – Campos II</h3>
-                <p>São João da Barra, RJ · GNA · 8 fotos</p>
-                <span class="portfolio-card__cta">Ver galeria →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="portfolio-card" data-aos data-obra="3">
-          <div class="portfolio-card__img">
-            <img src="img/obras/lt-caetite/Imagem15.jpg" alt="LT 230 kV Caetité Norte" loading="lazy" />
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag portfolio-card__tag--230">230 kV</span>
-              <div class="portfolio-card__overlay-info">
-                <h3>LT Caetité Norte – Igaporã III</h3>
-                <p>Caetité, BA · Rio Energy · 7 fotos</p>
-                <span class="portfolio-card__cta">Ver galeria →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="portfolio-card" data-aos data-obra="4">
-          <div class="portfolio-card__img">
-            <img src="img/obras/rmt-trairi/Imagem22.jpg" alt="RMT Trairi Solar" loading="lazy" />
-            <div class="portfolio-card__overlay">
-              <span class="portfolio-card__tag portfolio-card__tag--34">34,5 kV</span>
-              <div class="portfolio-card__overlay-info">
-                <h3>RMT Solar Serra do Mato</h3>
-                <p>Trairi, CE · QAIR · 2 fotos</p>
-                <span class="portfolio-card__cta">Ver galeria →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════ LIGHTBOX -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <div class="lightbox__backdrop" id="lbBackdrop"></div>
-    <button class="lightbox__close" id="lbClose" aria-label="Fechar">✕</button>
-    <button class="lightbox__prev" id="lbPrev" aria-label="Anterior">&#8249;</button>
-    <button class="lightbox__next" id="lbNext" aria-label="Próxima">&#8250;</button>
-    <div class="lightbox__content">
-      <div class="lightbox__img-wrap">
-        <img id="lbImg" src="" alt="" />
-      </div>
-      <div class="lightbox__caption">
-        <span id="lbTitle"></span>
-        <span id="lbCounter"></span>
-      </div>
-    </div>
-  </div>
-
   <!-- ═══════════════════════════════════════════ CLIENTES -->
   <section class="clientes" id="clientes">
     <div class="container">
@@ -686,7 +704,7 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <img src="img/logo.png" alt="ENGELT Engenharia" height="40" />
+        <img src="img/logo.svg" alt="ENGELT Engenharia" height="40" />
         <p>"Compromisso e qualidade,<br/>otimizando custo e prazo"</p>
         <span class="footer__cnpj">ENGELT – Projetos e Construções Ltda<br/>CNPJ 04.839.187/0001-72</span>
       </div>
@@ -696,6 +714,7 @@
         <a href="#servicos">Serviços</a>
         <a href="#diferenciais">Diferenciais</a>
         <a href="#clientes">Clientes</a>
+        <a href="area-interna.html">Área Interna</a>
         <a href="#contato">Contato</a>
       </div>
       <div class="footer__links">
