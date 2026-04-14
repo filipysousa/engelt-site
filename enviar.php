@@ -63,6 +63,9 @@ try {
 
     $mail->setFrom('sabrina@engeltengenharia.com.br', 'ENGELT Engenharia');
     $mail->addAddress('engenharia@engeltengenharia.com.br', 'ENGELT Engenharia');
+    $mail->addCC('filipysousa@engeltengenharia.com.br', 'Filipy Sousa');
+    $mail->addCC('luiztoledo@engeltengenharia.com.br', 'Luiz Toledo');
+    $mail->addCC('sabrina@engeltengenharia.com.br', 'Sabrina');
     $mail->addReplyTo($email, $nome);
 
     $mail->Subject = '[Site ENGELT] ' . $assunto;
