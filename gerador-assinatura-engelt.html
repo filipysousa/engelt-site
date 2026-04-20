@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerador de Assinatura — ENGELT</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .sig-body {
+      background: var(--gray-100);
+      padding: 60px 0 90px;
+    }
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .sig-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sig-card__title {
+      font-family: var(--font-cond);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .sig-field { margin-bottom: 14px; }
+    .sig-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+    }
+    .sig-input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      background: var(--gray-100);
+      font-family: var(--font);
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .sig-input:focus {
+      border-color: var(--blue);
+      background: var(--white);
+    }
+    .sig-btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: var(--blue-dark);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      text-transform: uppercase;
+      margin-top: 6px;
+      transition: background var(--transition);
+    }
+    .sig-btn-primary:hover { background: var(--blue-mid); }
+    .sig-preview-col { display: flex; flex-direction: column; gap: 20px; }
+    .sig-preview-box {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 20px;
+      min-height: 100px;
+    }
+    .sig-code-box {
+      background: var(--gray-800);
+      border-radius: var(--radius);
+      padding: 14px;
+      overflow-x: auto;
+    }
+    .sig-code-box pre {
+      font-family: 'Courier New', monospace;
+      font-size: 0.64rem;
+      color: #a8e6a8;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .sig-actions { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .sig-btn-action {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background var(--transition);
+    }
+    .sig-btn-action--orange { background: var(--orange); color: var(--white); }
+    .sig-btn-action--orange:hover { background: var(--orange-dark); }
+    .sig-btn-action--blue { background: var(--blue-dark); color: var(--white); }
+    .sig-btn-action--blue:hover { background: var(--blue-mid); }
+    .sig-btn-action--gray { background: var(--gray-600); color: var(--white); }
+    .sig-btn-action--gray:hover { background: var(--gray-800); }
+    .sig-btn-action.success { background: #2e7d32 !important; }
+    .sig-instructions {
+      background: var(--blue-light);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 16px 18px;
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      line-height: 1.8;
+    }
+    .sig-instructions strong { color: var(--blue-dark); }
+    @media (max-width: 720px) {
+      .sig-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════ NAVBAR -->
+  <header class="navbar scrolled" id="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="img/logo.svg" alt="ENGELT Engenharia" height="44" />
+      </a>
+      <nav class="navbar__links" id="navLinks">
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#servicos">Serviços</a>
+        <a href="index.html#diferenciais">Diferenciais</a>
+        <a href="index.html#clientes">Clientes</a>
+        <a href="area-interna.html">Área Interna</a>
+        <a href="index.html#contato" class="btn btn--nav">Contato</a>
+      </nav>
+      <button class="navbar__toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════ HERO -->
+  <section class="ai-page-hero">
+    <div class="container">
+      <span class="label-tag label-tag--light">Ferramentas Internas</span>
+      <h1>Gerador de Assinatura</h1>
+      <p>Crie assinaturas de e-mail padronizadas para os colaboradores ENGELT.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ CORPO -->
+  <section class="sig-body">
+    <div class="container">
+      <div class="sig-grid">
+
+        <!-- FORMULÁRIO -->
+        <div class="sig-card">
+          <p class="sig-card__title">Dados do Colaborador</p>
+
+          <div class="sig-field">
+            <label class="sig-label">Nome completo</label>
+            <input class="sig-input" type="text" id="nome" placeholder="Ex: Brayon José Gonzaga Nunes da Silva" oninput="atualizar()">
+          </div>
+          <div class="sig-field">
+            <label class="sig-label">Cargo</label>
+            <input class="sig-input" type="text" id="cargo" placeholder="Ex: Supervisor de Obras" oninput="atualizar()">
+          </div>
+          <div class="sig-field">
+            <label class="sig-label">Obra / Projeto</label>
+            <input class="sig-input" type="text" id="obra" placeholder="Ex: SE 500 kV CRISTINO CASTRO" oninput="atualizar()">
+          </div>
+          <div class="sig-field">
+            <label class="sig-label">E-mail</label>
+            <input class="sig-input" type="email" id="email" placeholder="Ex: brayon@engeltengenharia.com.br" oninput="atualizar()">
+          </div>
+          <div class="sig-field">
+            <label class="sig-label">Telefone fixo</label>
+            <input class="sig-input" type="text" id="telefone" value="(85) 3279 6330" oninput="atualizar()">
+          </div>
+          <div class="sig-field">
+            <label class="sig-label">Celular / WhatsApp (opcional)</label>
+            <input class="sig-input" type="text" id="celular" placeholder="Ex: (85) 99999-0000" oninput="atualizar()">
+          </div>
+          <button class="sig-btn-primary" onclick="atualizar()">Gerar Assinatura</button>
+        </div>
+
+        <!-- PREVIEW + AÇÕES -->
+        <div class="sig-preview-col">
+
+          <div class="sig-card">
+            <p class="sig-card__title">Preview</p>
+            <div class="sig-preview-box" id="preview-box">
+              <p style="color:#aaa;font-size:0.85rem;font-family:sans-serif;">Preencha os campos para visualizar.</p>
+            </div>
+          </div>
+
+          <div class="sig-card">
+            <p class="sig-card__title">HTML — Cole no Thunderbird ou Outlook</p>
+            <div class="sig-code-box">
+              <pre id="codigo-html"><!-- preencha os campos para gerar --></pre>
+            </div>
+            <div class="sig-actions">
+              <button class="sig-btn-action sig-btn-action--orange" id="btn-copy" onclick="copiarHTML()">Copiar HTML</button>
+              <button class="sig-btn-action sig-btn-action--blue" id="btn-salvar" onclick="salvarHTM()">Salvar para Outlook (3 arquivos)</button>
+              <button class="sig-btn-action sig-btn-action--gray" id="btn-pasta" onclick="abrirPasta()">Abrir pasta de Assinaturas</button>
+            </div>
+          </div>
+
+          <div class="sig-instructions">
+            <strong>Como instalar no Outlook:</strong><br>
+            1. Clique "Salvar para Outlook" — o arquivo já vem com o nome do colaborador<br>
+            2. Clique "Abrir pasta de Assinaturas" e mova o arquivo baixado para lá<br>
+            3. No Outlook: Arquivo → Opções → Email → Assinaturas → selecione → OK<br><br>
+            <strong>Thunderbird:</strong> Menu ≡ → Configurações → sua conta → Assinatura → marcar "Usar HTML" → colar o código
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <img src="img/logo.svg" alt="ENGELT Engenharia" height="40" />
+        <p>"Compromisso e qualidade,<br/>otimizando custo e prazo"</p>
+        <span class="footer__cnpj">ENGELT – Projetos e Construções Ltda<br/>CNPJ 04.839.187/0001-72</span>
+      </div>
+      <div class="footer__links">
+        <strong>Navegação</strong>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#servicos">Serviços</a>
+        <a href="index.html#diferenciais">Diferenciais</a>
+        <a href="index.html#clientes">Clientes</a>
+        <a href="area-interna.html">Área Interna</a>
+        <a href="index.html#contato">Contato</a>
+      </div>
+      <div class="footer__links">
+        <strong>Serviços</strong>
+        <a href="index.html#servicos">Linhas de Transmissão</a>
+        <a href="index.html#servicos">Subestações</a>
+        <a href="index.html#servicos">Redes de Média Tensão</a>
+        <a href="index.html#servicos">Parques Renováveis</a>
+      </div>
+      <div class="footer__contato">
+        <strong>Contato</strong>
+        <a href="tel:+558532796330">(85) 3279-6330</a>
+        <a href="https://wa.me/5585981722718" target="_blank" rel="noopener">(85) 98172-2718 (WhatsApp)</a>
+        <a href="mailto:engenharia@engeltengenharia.com.br">engenharia@engeltengenharia.com.br</a>
+        <span>Fortaleza – CE</span>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="container">
+        <span>© 2025 ENGELT Engenharia. Todos os direitos reservados.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const LOGO_URL = "https://engeltengenharia.com.br/img/logo.svg";
+    const ENDERECO = "Rua Cônego Braveza, 770 - Cidade dos Funcionários, CEP: 60.822-815 - Fortaleza – CE";
+    const SITE = "www.engeltengenharia.com.br";
+
+    function gerarHTML(nome, cargo, obra, email, telefone, celular) {
+      const fone1 = telefone ? '(+55) ' + telefone : '';
+      const fone2 = celular ? ' | ' + celular : '';
+      const foneStr = fone1 + fone2;
+
+      let contatos = '';
+      if (obra) contatos += '<p style="margin:0 0 2px 0;font-family:Cambria,serif;font-size:9pt;color:#000000;">' + obra.toUpperCase() + '</p>';
+      if (foneStr) contatos += '<p style="margin:0 0 2px 0;font-family:Cambria,serif;font-size:9pt;color:#000000;">Contatos: ' + foneStr + '</p>';
+      contatos += '<p style="margin:0 0 2px 0;font-family:Cambria,serif;font-size:9pt;color:#000000;">Rua C\u00f4nego Braveza, 770 - Cidade dos Funcion\u00e1rios</p>';
+      contatos += '<p style="margin:0 0 2px 0;font-family:Cambria,serif;font-size:8pt;color:#000000;">CEP: 60.822-815 - Fortaleza \u2013 CE</p>';
+      if (email) contatos += '<p style="margin:0 0 2px 0;font-size:8pt;"><a href="mailto:' + email + '" style="font-family:Cambria,serif;color:#467886;text-decoration:none;">' + email + '</a></p>';
+      contatos += '<p style="margin:0 0 4px 0;font-size:8pt;"><a href="https://' + SITE + '" style="font-family:Cambria,serif;color:#467886;text-decoration:none;">' + SITE + '</a></p>';
+      contatos += '<p style="margin:0;font-family:Cambria,serif;font-size:7pt;color:green;"><b>Antes de imprimir</b>, pense na sua responsabilidade com o <b>Meio Ambiente</b>.</p>';
+
+      return '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">'
+        + '<tr><td colspan="3" nowrap style="padding:0 0 2px 0;">'
+        + '<p style="margin:0;font-family:Cambria,serif;font-size:13pt;font-weight:bold;color:blue;">' + nome + '</p>'
+        + '</td></tr>'
+        + '<tr><td colspan="3" nowrap style="padding:0 0 8px 0;">'
+        + '<p style="margin:0;font-family:Cambria,serif;font-size:10pt;font-weight:bold;color:#000000;">' + cargo + '</p>'
+        + '</td></tr>'
+        + '<tr>'
+        + '<td width="156" valign="top" style="padding:0;">'
+        + '<img src="' + LOGO_URL + '" alt="ENGELT Engenharia" width="192" height="64" style="display:block;" />'
+        + '</td>'
+        + '<td width="8" style="padding:0;"></td>'
+        + '<td valign="top" style="padding:0 0 0 4px;">'
+        + contatos
+        + '</td>'
+        + '</tr>'
+        + '</table>';
+    }
+
+    function atualizar() {
+      const nome = document.getElementById('nome').value.trim();
+      const cargo = document.getElementById('cargo').value.trim();
+      const obra = document.getElementById('obra').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefone = document.getElementById('telefone').value.trim();
+      const celular = document.getElementById('celular').value.trim();
+
+      if (!nome && !cargo) {
+        document.getElementById('preview-box').innerHTML = '<p style="color:#aaa;font-size:0.85rem;font-family:sans-serif;">Preencha os campos para visualizar.</p>';
+        document.getElementById('codigo-html').textContent = '<!-- preencha os campos para gerar -->';
+        return;
+      }
+
+      const html = gerarHTML(nome, cargo, obra, email, telefone, celular);
+      document.getElementById('preview-box').innerHTML = html;
+      document.getElementById('codigo-html').textContent = html;
+    }
+
+    function copiarHTML() {
+      const code = document.getElementById('codigo-html').textContent;
+      if (!code || code.includes('preencha')) return;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('btn-copy');
+        btn.textContent = 'Copiado!';
+        btn.classList.add('success');
+        setTimeout(() => {
+          btn.textContent = 'Copiar HTML';
+          btn.classList.remove('success');
+        }, 2000);
+      });
+    }
+
+    function baixarArquivo(conteudo, nomeArquivo, tipo) {
+      const blob = new Blob([conteudo], { type: tipo });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = nomeArquivo;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function salvarHTM() {
+      const code = document.getElementById('codigo-html').textContent;
+      if (!code || code.includes('preencha')) {
+        alert('Preencha os campos primeiro para gerar a assinatura.');
+        return;
+      }
+      const nome = document.getElementById('nome').value.trim();
+      const emailVal = document.getElementById('email').value.trim();
+      const cargo = document.getElementById('cargo').value.trim();
+      const obra = document.getElementById('obra').value.trim();
+      const telefone = document.getElementById('telefone').value.trim();
+      const celular = document.getElementById('celular').value.trim();
+
+      const nomeBase = nome ? nome.split(' ').slice(0, 2).join(' ') : 'Assinatura ENGELT';
+      const base = emailVal ? nomeBase + ' (' + emailVal + ')' : nomeBase;
+
+      const textoPlano = [
+        nome, cargo,
+        obra ? obra.toUpperCase() : '',
+        telefone ? '(+55) ' + telefone + (celular ? ' | ' + celular : '') : '',
+        'Rua Conego Braveza, 770 - Cidade dos Funcionarios, CEP: 60.822-815 - Fortaleza - CE',
+        emailVal,
+        'www.engeltengenharia.com.br',
+        'Antes de imprimir, pense na sua responsabilidade com o Meio Ambiente.'
+      ].filter(Boolean).join('\r\n');
+
+      const rtfConteudo = '{\\rtf1\\ansi\\deff0 ' + textoPlano.replace(/\r\n/g, '\\par ') + '}';
+
+      baixarArquivo(code, base + '.htm', 'text/html;charset=utf-8');
+      setTimeout(() => baixarArquivo(textoPlano, base + '.txt', 'text/plain;charset=utf-8'), 400);
+      setTimeout(() => baixarArquivo(rtfConteudo, base + '.rtf', 'application/rtf'), 800);
+
+      const btn = document.getElementById('btn-salvar');
+      btn.textContent = '3 arquivos baixados: ' + base + '.*';
+      btn.classList.add('success');
+      setTimeout(() => {
+        btn.textContent = 'Salvar para Outlook (3 arquivos)';
+        btn.classList.remove('success');
+      }, 4000);
+    }
+
+    function abrirPasta() {
+      const bat = '@echo off\r\nstart "" "%APPDATA%\\Microsoft\\Signatures"\r\n';
+      const blob = new Blob([bat], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'abrir_pasta_assinaturas.bat';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      const btn = document.getElementById('btn-pasta');
+      btn.textContent = '.bat baixado — execute-o!';
+      btn.classList.add('success');
+      setTimeout(() => {
+        btn.textContent = 'Abrir pasta de Assinaturas';
+        btn.classList.remove('success');
+      }, 3000);
+    }
+
+    // Mobile menu toggle
+    (function () {
+      var navToggle = document.getElementById('navToggle');
+      var navLinks  = document.getElementById('navLinks');
+      navToggle.addEventListener('click', function () {
+        var open = navLinks.classList.toggle('open');
+        document.body.style.overflow = open ? 'hidden' : '';
+        navToggle.querySelectorAll('span').forEach(function (s, i) {
+          s.style.transform = open
+            ? (i === 0 ? 'translateY(7px) rotate(45deg)'
+               : i === 1 ? 'scaleX(0)'
+               :           'translateY(-7px) rotate(-45deg)')
+            : '';
+          s.style.opacity = (open && i === 1) ? '0' : '1';
+        });
+      });
+    })();
+
+    window.onload = function () {
+      document.getElementById('nome').value = 'Brayon José Gonzaga Nunes da Silva';
+      document.getElementById('cargo').value = 'Supervisor de Obras';
+      document.getElementById('obra').value = 'SE 500 kV CRISTINO CASTRO';
+      document.getElementById('email').value = 'brayonjose@engeltengenharia.com.br';
+      atualizar();
+    };
+  </script>
+
+</body>
+</html>
